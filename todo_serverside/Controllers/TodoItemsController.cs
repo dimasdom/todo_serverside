@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using todo_serverside.Commands;
 using todo_serverside.Context;
 using todo_serverside.Models;
 using todo_serverside.Queries;
@@ -17,35 +18,38 @@ namespace todo_serverside.Controllers
     public class TodoItemsController : ControllerBase
     {
         private readonly TodoListContext _context;
-        
+        private IMediator _mediator;
 
-        
-
-        public TodoItemsController(TodoListContext context)
+        public TodoItemsController(TodoListContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
         // GET: api/TodoItems
-       // [HttpGet]
-       // public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
-       // {
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
+        {
+            var query = new GetAllTodoItemsQuery();
 
-         //   return await _context.TodoItems.
-        //}
+            return await _mediator.Send(query);
+       
+       }
 
         // GET: api/TodoItems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoItem>> GetTodoItem(Guid id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var query = new GetTodoItemByIdQuery(id);
 
-            if (todoItem == null)
+            var response =  await _mediator.Send(query);
+
+            if (response == null)
             {
                 return NotFound();
             }
 
-            return todoItem;
+            return response;
         }
 
         // PUT: api/TodoItems/5
@@ -84,9 +88,8 @@ namespace todo_serverside.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
         {
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
-
+            var command = new CreateTodoItemCommand(todoItem);
+            var response = _mediator.Send(command);
             return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
         }
 

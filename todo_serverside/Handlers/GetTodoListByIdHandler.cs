@@ -22,7 +22,7 @@ namespace todo_serverside.Handlers
         public async Task<TodoList> Handle(GetTodoListByIdQuery request, CancellationToken cancellationToken)
         {
             var result = await _context.TodoLists.FindAsync(request.Id);
-            return result == null ? null : result;
+            return result ?? null;
         }
     }
 }

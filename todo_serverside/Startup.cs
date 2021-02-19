@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,12 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using todo_serverside.Context;
-
+using todo_serverside.PipeLineBehavior;
 namespace todo_serverside
 {
     public class Startup
@@ -35,6 +32,8 @@ namespace todo_serverside
                     .UseNpgsql(Configuration.GetConnectionString("PostgresConnection"))
             );
             services.AddMediatR(typeof(Startup));
+            services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
+            services.AddTransient(typeof(todo_serverside.PipeLineBehavior.IPipeLineBehavior<,>), typeof(todo_serverside.PipeLineBehavior.ValidationBehavior<,>));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "todo_serverside", Version = "v1" });
