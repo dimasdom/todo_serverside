@@ -1,16 +1,23 @@
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using todo_serverside.Context;
+using todo_serverside.Models;
 using todo_serverside.PipeLineBehavior;
+using todo_serverside.Services;
+
 namespace todo_serverside
 {
     public class Startup
@@ -34,6 +41,22 @@ namespace todo_serverside
             services.AddMediatR(typeof(Startup));
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
             services.AddTransient(typeof(todo_serverside.PipeLineBehavior.IPipeLineBehavior<,>), typeof(todo_serverside.PipeLineBehavior.ValidationBehavior<,>));
+            services.AddIdentity<User, IdentityRole>()
+                 .AddEntityFrameworkStores<TodoListContext>()
+                 .AddSignInManager<SignInManager<User>>();
+            services.AddScoped<TokenService>();
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("If you see it , hello"));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt=>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = key,
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "todo_serverside", Version = "v1" });
@@ -51,6 +74,8 @@ namespace todo_serverside
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

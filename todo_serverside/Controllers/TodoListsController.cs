@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +27,10 @@ namespace todo_serverside.Controllers
         }
 
         // GET: api/TodoLists
+        
         [HttpGet]
+        [Authorize(AuthenticationSchemes =
+    JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<TodoList>>> GetTodoLists()
         {
             var query = new GetAllOrdersQuery();
@@ -34,6 +39,7 @@ namespace todo_serverside.Controllers
         }
 
         // GET: api/TodoLists/5
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoList>> GetTodoList(Guid id)
         {

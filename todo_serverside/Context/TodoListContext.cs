@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using todo_serverside.Models;
 
 namespace todo_serverside.Context
 {
-    public class TodoListContext:DbContext
+    public class TodoListContext: IdentityDbContext<User>
     {
         public TodoListContext(DbContextOptions<TodoListContext> options) : base(options)
         {
