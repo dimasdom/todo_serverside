@@ -38,6 +38,13 @@ namespace todo_serverside
                 dbContextOptions => dbContextOptions
                     .UseNpgsql(Configuration.GetConnectionString("PostgresConnection"))
             );
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                });
+            });
             services.AddMediatR(typeof(Startup));
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
             services.AddTransient(typeof(todo_serverside.PipeLineBehavior.IPipeLineBehavior<,>), typeof(todo_serverside.PipeLineBehavior.ValidationBehavior<,>));
@@ -76,6 +83,8 @@ namespace todo_serverside
             app.UseRouting();
 
             app.UseAuthentication();
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 

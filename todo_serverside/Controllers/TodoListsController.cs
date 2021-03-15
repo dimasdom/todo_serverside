@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ namespace todo_serverside.Controllers
         }
 
         // GET: api/TodoLists
-        
+        [EnableCors]
         [HttpGet]
         [Authorize(AuthenticationSchemes =
     JwtBearerDefaults.AuthenticationScheme)]

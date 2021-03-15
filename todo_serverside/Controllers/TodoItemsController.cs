@@ -38,9 +38,9 @@ namespace todo_serverside.Controllers
 
         // GET: api/TodoItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetTodoItem(Guid id)
+        public async Task<ActionResult<List<TodoItem>>> GetTodoItem(Guid id)
         {
-            var query = new GetTodoItemByIdQuery(id);
+            var query = new GetTodoItemsByTodoListIdQuery(id);
 
             var response =  await _mediator.Send(query);
 
@@ -51,6 +51,7 @@ namespace todo_serverside.Controllers
 
             return response;
         }
+
 
         // PUT: api/TodoItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -92,7 +93,12 @@ namespace todo_serverside.Controllers
             var response = _mediator.Send(command);
             return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
         }
-
+        [HttpPost("done/{id}")]
+        public async Task<ActionResult<bool>> PutDoneStatus(Guid id)
+        {
+            var command = new SetDoneStatusQuery(id);
+            return await _mediator.Send(command);
+        }
         // DELETE: api/TodoItems/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodoItem(Guid id)
