@@ -12,10 +12,15 @@ namespace todo_serverside.Handlers
 {
     public class TodoListChangeCommonStatusHandler : IRequestHandler<TodoListChangeCommonStatus, bool>
     {
+        public TodoListChangeCommonStatusHandler(TodoListContext context)
+        {
+            _context = context;
+        }
+
         private TodoListContext _context { get; set; }
         public async Task<bool> Handle(TodoListChangeCommonStatus request, CancellationToken cancellationToken)
         {
-            var entity = _context.TodoLists.FirstOrDefault(item => item.Id == request.TodoListId);
+            var entity = await _context.TodoLists.FindAsync(request.TodoListId);
             
             if (entity != null)
             {

@@ -23,7 +23,7 @@ namespace todo_serverside.SignalR
             var response = await _mediator.Send(command);
             await Clients.Group(response.TodoListId.ToString()).SendAsync("ReceiveTodoItem", response);
         }
-        public async Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
             var httpContext = Context.GetHttpContext();
             var TodoListId = httpContext.Request.Query["todoListId"];

@@ -100,7 +100,13 @@ namespace todo_serverside
 
             app.UseAuthentication();
 
-            app.UseCors("CorsPolicy");
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:3000")
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST","DELETE")
+                    .AllowCredentials();
+            });
 
             app.UseAuthorization();
 
