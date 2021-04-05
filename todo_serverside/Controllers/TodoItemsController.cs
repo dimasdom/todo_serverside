@@ -91,7 +91,7 @@ namespace todo_serverside.Controllers
         {
             var command = new CreateTodoItemCommand(todoItem);
             var response = _mediator.Send(command);
-            return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
+            return CreatedAtAction("GetTodoItem", new { id = response.Id }, todoItem);
         }
         [HttpPost("done/{id}")]
         public async Task<ActionResult<bool>> PutDoneStatus(Guid id)

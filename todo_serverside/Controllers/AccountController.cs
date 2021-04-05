@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using todo_serverside.Commands;
 using todo_serverside.DTOs;
 using todo_serverside.Models;
+using todo_serverside.Request;
 using todo_serverside.Services;
 
 namespace todo_serverside.Controllers
@@ -42,6 +43,47 @@ namespace todo_serverside.Controllers
         public async Task<ActionResult<UserDTOs>> Register(RegisterDTOs register)
         {
             var command = new AccountRegisterCommand(register);
+            var response = await _mediator.Send(command);
+            return response;
+        }
+        [HttpPost("setAvatar")]
+        public async Task<ActionResult<string>> SetAvatar(string avatar,Guid userId)
+        {
+            var command = new AccountSetAvatarCommand(avatar,userId) ;
+            var response = await _mediator.Send(command);
+            return response;
+        }
+        [HttpPost("sentFriendRequest/{id}")]
+        public async Task<IActionResult> SendFriendRequest(string id, UserIdRequest UserId)
+        {
+            var command = new SendFriendRequestCommand(id, UserId.UserId);
+            var result = await _mediator.Send(command);
+            if (result)
+            {
+                return Ok();
+            }else
+            {
+                return NotFound();
+            }
+        }
+        [HttpPost("acceptFriendRequest/{id}")]
+        public async Task<IActionResult> AcceptFriendRequest(string id, UserIdRequest UserId)
+        {
+            var command = new AcceptFriendRequestCommand(id, UserId.UserId);
+            var result = await _mediator.Send(command);
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+        [HttpPost("searchUser")]
+        public async Task<ActionResult<UserDTOs>> SearchUserByUserName(UserNameRequest UserName)
+        {
+            var command = new SearchUserByUserNameCommand(UserName.UserName);
             var response = await _mediator.Send(command);
             return response;
         }

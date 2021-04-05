@@ -13,6 +13,7 @@ namespace todo_serverside.Models
             public bool Done { get; set; }
 
             public Guid TodoListId { get; set; }
+            public string CreatedByUserId { get; set; }
         
     }
 }

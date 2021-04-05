@@ -38,7 +38,11 @@ namespace todo_serverside.Handlers
             var user = new User
             {
                 Email = request.Register.Email,
-                UserName = request.Register.UserName
+                UserName = request.Register.UserName ,
+                Avatar = "",
+                TodoListsIds="[]",
+                Friends="[]",
+                FriendsRequest="[]"
 
             };
             var result = await _userManager.CreateAsync(user, request.Register.Password);

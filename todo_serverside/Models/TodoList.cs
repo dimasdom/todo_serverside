@@ -13,6 +13,8 @@ namespace todo_serverside.Models
         public Guid Id { get; set; }
         public string Tittle { get; set; }
         
-        public  Guid UserId { get; set; }
+        public  Guid OwnerId { get; set; }
+        public bool Common { get; set; }
+        public string UserIds { get; set; }
     }
 }

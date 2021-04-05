@@ -13,6 +13,8 @@ using todo_serverside.Commands;
 using todo_serverside.Context;
 using todo_serverside.Models;
 using todo_serverside.Queries;
+using todo_serverside.Request;
+
 namespace todo_serverside.Controllers
 {
     [Route("api/[controller]")]
@@ -21,7 +23,7 @@ namespace todo_serverside.Controllers
     {
         private readonly TodoListContext _context;
         private readonly IMediator _mediator;
-        public TodoListsController(TodoListContext context,IMediator mediator)
+        public TodoListsController(TodoListContext context, IMediator mediator)
         {
             _context = context;
             _mediator = mediator;
@@ -40,7 +42,13 @@ namespace todo_serverside.Controllers
         }
 
         // GET: api/TodoLists/5
-        
+        [HttpGet("getByUserId/{id}")]
+        public async Task<ActionResult<List<TodoList>>> GetTodoListByUserId(string id)
+        {
+            var query = new GetTodoListsByUserId(id);
+            var response = await _mediator.Send(query);
+            return response;
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<TodoList>> GetTodoList(Guid id)
         {
@@ -82,28 +90,36 @@ namespace todo_serverside.Controllers
 
         // POST: api/TodoLists
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TodoList>> PostTodoList(TodoList todoList)
+        [HttpPost("createPersonalTodoList/{id}")]
+        public async Task<ActionResult<TodoList>> PostTodoList( Guid id, TodoList todoList)
         {
             var command = new CreateTodoListCommand(todoList);
+            var commandAccount = new AccountAddTodoListToUser(id, todoList.Id);
             var handler = await _mediator.Send(command);
+            var accHandler = await _mediator.Send(commandAccount);
             return CreatedAtAction("GetTodoList", new { id = handler.Id }, todoList);
         }
-
-        // DELETE: api/TodoLists/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTodoList(Guid id)
+        [HttpPost("changeCommonStatus/{id}")]
+        public async Task<IActionResult> ChangeCommonStatus(Guid id , UserIdsRequest UserIds)
         {
-            var todoList = await _context.TodoLists.FindAsync(id);
-            if (todoList == null)
+            var command = new TodoListChangeCommonStatus(id,UserIds.UserIds) ;
+            var handler = await _mediator.Send(command);
+            return Ok();
+        }
+        // DELETE: api/TodoLists/5
+        [HttpDelete("{UserId}/{id}")]
+        public async Task<IActionResult> DeleteTodoList(Guid UserId, Guid id)
+        {
+            var command = new DeleteTodoListFromAccount(UserId, id);
+            var result = await _mediator.Send(command);
+            if (result)
             {
-                return NotFound();
+                return Ok();
             }
-
-            _context.TodoLists.Remove(todoList);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            else
+            {
+               return  NotFound();
+            }
         }
 
         private bool TodoListExists(Guid id)

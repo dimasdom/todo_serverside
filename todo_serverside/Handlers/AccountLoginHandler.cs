@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using todo_serverside.Commands;
@@ -35,8 +36,12 @@ namespace todo_serverside.Handlers
                 {
                     UserName = user.UserName,
                     Id = user.Id,
-                    Token = _tokenService.CreateToken(user)
-
+                    Token = _tokenService.CreateToken(user),
+                    UserFriendsRequests = JsonSerializer.Deserialize<string[]>(user.FriendsRequest),
+                    UsersFriends = JsonSerializer.Deserialize<string[]>(user.Friends),
+                    Avatar = user.Avatar
+                    
+                    
                 };
             }
             else

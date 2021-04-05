@@ -13,10 +13,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Threading.Tasks;
 using todo_serverside.Context;
 using todo_serverside.Models;
 using todo_serverside.PipeLineBehavior;
 using todo_serverside.Services;
+using todo_serverside.SignalR;
 
 namespace todo_serverside
 {
@@ -63,11 +65,25 @@ namespace todo_serverside
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
+                    opt.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/todoList")))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "todo_serverside", Version = "v1" });
             });
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,6 +107,7 @@ namespace todo_serverside
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<TodoListHub>("/todoList");
             });
         }
     }

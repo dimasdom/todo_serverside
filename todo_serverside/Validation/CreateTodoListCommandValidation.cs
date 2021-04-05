@@ -13,7 +13,7 @@ namespace todo_serverside.Validation
         {
             RuleFor(x => x.TodoList.Id).NotEmpty();
             RuleFor(x => x.TodoList.Tittle).NotEmpty();
-            RuleFor(x => x.TodoList.UserId).NotEmpty();
+            RuleFor(x => x.TodoList.OwnerId).NotEmpty();
         }
     }
     

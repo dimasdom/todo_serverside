@@ -23,7 +23,7 @@ namespace todo_serverside.Handlers
             var entity =  _context.TodoItems.FirstOrDefault(item => item.Id == request.Id);
             if (entity != null)
             {
-                entity.Done = false;
+                entity.Done = !entity.Done;
                 _context.SaveChanges();
             }
             return Task<bool>.FromResult(entity.Done);

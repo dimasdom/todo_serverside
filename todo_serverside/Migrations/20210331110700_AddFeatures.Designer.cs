@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using todo_serverside.Context;
@@ -9,9 +10,10 @@ using todo_serverside.Context;
 namespace todo_serverside.Migrations
 {
     [DbContext(typeof(TodoListContext))]
-    partial class TodoListContextModelSnapshot : ModelSnapshot
+    [Migration("20210331110700_AddFeatures")]
+    partial class AddFeatures
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,11 +183,11 @@ namespace todo_serverside.Migrations
                     b.Property<bool>("Common")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("OwnerId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Tittle")
                         .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("UserIds")
                         .HasColumnType("text");
@@ -220,7 +222,7 @@ namespace todo_serverside.Migrations
                     b.Property<string>("Friends")
                         .HasColumnType("text");
 
-                    b.Property<string>("FriendsRequest")
+                    b.Property<string>("FrinedsRequest")
                         .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
@@ -247,9 +249,6 @@ namespace todo_serverside.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<string>("TodoListsIds")
                         .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
