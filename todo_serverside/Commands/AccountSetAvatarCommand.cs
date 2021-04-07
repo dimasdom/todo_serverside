@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace todo_serverside.Commands
 {
     public class AccountSetAvatarCommand : IRequest<string>
     {
-        public string Avatar;
+        public IFormFile Avatar;
         public Guid UserId;
 
-        public AccountSetAvatarCommand(string avatar,Guid id)
+        public AccountSetAvatarCommand(IFormFile avatar,Guid id)
         {
             Avatar = avatar;
             UserId = id;

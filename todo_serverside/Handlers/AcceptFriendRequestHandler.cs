@@ -21,13 +21,13 @@ namespace todo_serverside.Handlers
         public Task<bool> Handle(AcceptFriendRequestCommand request, CancellationToken cancellationToken)
         {
             var userWhoAccept = _context.Users.FirstOrDefault(i => i.Id == request.UserId);
-            var userWhoRequest = _context.Users.FirstOrDefault(i => i.Id == request.id);
+            var userWhoRequest = _context.Users.FirstOrDefault(i => i.Id == request.id.ToString());
             if(userWhoAccept!=null&& userWhoRequest != null)
             {
                 var userWhoAcceptNewFriendsRequest = JsonSerializer.Deserialize<string[]>(userWhoAccept.FriendsRequest).ToList<string>();
                 var userWhoAcceptNewFriends = JsonSerializer.Deserialize<string[]>(userWhoAccept.Friends).ToList<string>();
-                userWhoAcceptNewFriends.Add(request.id);
-                userWhoAccept.FriendsRequest = JsonSerializer.Serialize(userWhoAcceptNewFriendsRequest.Where(i => i != request.id));
+                userWhoAcceptNewFriends.Add(request.id.ToString());
+                userWhoAccept.FriendsRequest = JsonSerializer.Serialize(userWhoAcceptNewFriendsRequest.Where(i => i != request.id.ToString()));
                 userWhoAccept.Friends = JsonSerializer.Serialize(userWhoAcceptNewFriends);
 
                 var userWhoRequestNewFriendsRequest = JsonSerializer.Deserialize<string[]>(userWhoRequest.FriendsRequest).ToList<string>();

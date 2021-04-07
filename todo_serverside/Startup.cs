@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using todo_serverside.Context;
 using todo_serverside.Models;
+using todo_serverside.Photos;
 using todo_serverside.PipeLineBehavior;
 using todo_serverside.Services;
 using todo_serverside.SignalR;
@@ -84,6 +85,8 @@ namespace todo_serverside
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "todo_serverside", Version = "v1" });
             });
             services.AddSignalR();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,13 +8,13 @@ namespace todo_serverside.Commands
 {
     public class AcceptFriendRequestCommand:IRequest<bool>
     {
-        public AcceptFriendRequestCommand(string id, string userId)
+        public AcceptFriendRequestCommand(Guid id, string userId)
         {
             this.id = id;
             UserId = userId;
         }
 
-        public string id { get; set; }
+        public Guid id { get; set; }
         public string UserId { get; set; }
     }
 }
