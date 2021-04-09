@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +14,7 @@ namespace todo_serverside.Handlers
 {
     public class SendFriendRequestHandler : IRequestHandler<SendFriendRequestCommand, bool>
     {
+
         public SendFriendRequestHandler(TodoListContext context)
         {
             _context = context;
@@ -25,13 +28,13 @@ namespace todo_serverside.Handlers
             {
                 if (user.FriendsRequest == "[]")
                 {
-                    string[] friendRequest = { request.UserId };
+                    string[] friendRequest = { request.Id };
                     user.FriendsRequest = JsonSerializer.Serialize<string[]>(friendRequest);
                 }
                 else
                 {
                     var userNewFriendsRequest = JsonSerializer.Deserialize<string[]>(user.FriendsRequest).ToList<string>();
-                    userNewFriendsRequest.Add(request.UserId);
+                    userNewFriendsRequest.Add(request.Id);
                     user.FriendsRequest = JsonSerializer.Serialize(userNewFriendsRequest);
                 }
                 _context.SaveChanges();

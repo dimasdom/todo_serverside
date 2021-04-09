@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,15 +14,19 @@ namespace todo_serverside.Handlers
 {
     public class DeleteTodoListFromAccountHandler : IRequestHandler<DeleteTodoListFromAccount, bool>
     {
-        public DeleteTodoListFromAccountHandler(TodoListContext context)
+        private IHttpContextAccessor _httpContextAccessor;
+
+        public DeleteTodoListFromAccountHandler(TodoListContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public TodoListContext _context { get; set; }
         public Task<bool> Handle(DeleteTodoListFromAccount request, CancellationToken cancellationToken)
         {
-            var user = _context.Users.FirstOrDefault(i => i.Id == request.UserId.ToString());
+            var currentUserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = _context.Users.FirstOrDefault(i => i.Id == currentUserId);
             var todoList = _context.TodoLists.Find(request.TodoListId);
             if (user != null&&todoList!=null)
             {

@@ -8,13 +8,11 @@ namespace todo_serverside.Commands
 {
     public class SendFriendRequestCommand : IRequest<bool>
     {
-        public SendFriendRequestCommand(string id, string userId)
+        public SendFriendRequestCommand(string id)
         {
             Id = id;
-            UserId = userId;
         }
 
         public string Id { get; set; }
-        public string UserId{ get; set; }
     }
 }

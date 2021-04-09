@@ -8,13 +8,11 @@ namespace todo_serverside.Commands
 {
     public class DeleteTodoListFromAccount:IRequest<bool>
     {
-        public DeleteTodoListFromAccount(Guid userId, Guid todoListId)
+        public DeleteTodoListFromAccount( Guid todoListId)
         {
-            UserId = userId;
             TodoListId = todoListId;
         }
 
-        public Guid UserId { get; set; }
         public Guid TodoListId { get; set; }
 
 

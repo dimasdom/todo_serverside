@@ -20,6 +20,7 @@ using todo_serverside.Photos;
 using todo_serverside.PipeLineBehavior;
 using todo_serverside.Services;
 using todo_serverside.SignalR;
+using todo_serverside.UserVerification;
 
 namespace todo_serverside
 {
@@ -35,12 +36,13 @@ namespace todo_serverside
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddMvc();
             services.AddControllers();
             services.AddDbContextPool<TodoListContext>(
                 dbContextOptions => dbContextOptions
                     .UseNpgsql(Configuration.GetConnectionString("PostgresConnection"))
             );
+            
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -51,7 +53,7 @@ namespace todo_serverside
             services.AddMediatR(typeof(Startup));
             services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
             services.AddTransient(typeof(todo_serverside.PipeLineBehavior.IPipeLineBehavior<,>), typeof(todo_serverside.PipeLineBehavior.ValidationBehavior<,>));
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentityCore<User>()
                  .AddEntityFrameworkStores<TodoListContext>()
                  .AddSignInManager<SignInManager<User>>();
             services.AddScoped<TokenService>();
@@ -87,6 +89,9 @@ namespace todo_serverside
             services.AddSignalR();
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.AddHttpContextAccessor();
+            
+            services.AddScoped<UserVerificationClass>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -112,12 +117,12 @@ namespace todo_serverside
             });
 
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<TodoListHub>("/todoList");
             });
+            
         }
     }
 }

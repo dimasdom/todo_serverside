@@ -9,10 +9,11 @@ namespace todo_serverside.Queries
 {
     public class GetTodoItemsByTodoListIdQuery : IRequest<List<TodoItem>>
     {
-        public GetTodoItemsByTodoListIdQuery(Guid id)
+        public Guid id { get; set; }
+
+        public GetTodoItemsByTodoListIdQuery(Guid Id)
         {
-            Id = id;
+            id = Id;
         }
-        public Guid Id { get; set; }
     }
 }

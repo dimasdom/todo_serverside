@@ -47,17 +47,17 @@ namespace todo_serverside.Controllers
             var response = await _mediator.Send(command);
             return response;
         }
-        [HttpPost("setAvatar/{id}")]
-        public async Task<ActionResult<string>> SetAvatar(Guid id, IFormFile avatar)
+        [HttpPost("setAvatar")]
+        public async Task<ActionResult<string>> SetAvatar( IFormFile avatar)
         {
-            var command = new AccountSetAvatarCommand(avatar,id) ;
+            var command = new AccountSetAvatarCommand(avatar) ;
             var response = await _mediator.Send(command);
             return response;
         }
         [HttpPost("sentFriendRequest/{id}")]
-        public async Task<IActionResult> SendFriendRequest(string id, UserIdRequest UserId)
+        public async Task<IActionResult> SendFriendRequest(string id)
         {
-            var command = new SendFriendRequestCommand(id, UserId.UserId);
+            var command = new SendFriendRequestCommand(id);
             var result = await _mediator.Send(command);
             if (result)
             {
@@ -68,9 +68,9 @@ namespace todo_serverside.Controllers
             }
         }
         [HttpPost("acceptFriendRequest/{id}")]
-        public async Task<IActionResult> AcceptFriendRequest(Guid id, UserIdRequest UserId)
+        public async Task<IActionResult> AcceptFriendRequest(Guid id)
         {
-            var command = new AcceptFriendRequestCommand(id, UserId.UserId);
+            var command = new AcceptFriendRequestCommand(id);
             var result = await _mediator.Send(command);
             if (result)
             {

@@ -20,7 +20,7 @@ namespace todo_serverside.Handlers
         private TodoListContext _context { get; set; }
         public Task<List<TodoItem>> Handle(GetTodoItemsByTodoListIdQuery request, CancellationToken cancellationToken)
         {
-            var response =   _context.TodoItems.Where( t =>  t.TodoListId == request.Id).ToList();
+            var response =   _context.TodoItems.Where( t =>  t.TodoListId == request.id).ToList();
            var responseas=  Task<List<TodoItem>>.FromResult(response);
             
           if(response == null)

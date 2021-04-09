@@ -11,12 +11,10 @@ namespace todo_serverside.Commands
     public class AccountSetAvatarCommand : IRequest<string>
     {
         public IFormFile Avatar;
-        public Guid UserId;
 
-        public AccountSetAvatarCommand(IFormFile avatar,Guid id)
+        public AccountSetAvatarCommand(IFormFile avatar)
         {
             Avatar = avatar;
-            UserId = id;
         }
     }
 }

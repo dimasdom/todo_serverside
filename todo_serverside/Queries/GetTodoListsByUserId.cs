@@ -9,12 +9,10 @@ namespace todo_serverside.Queries
 {
     public class GetTodoListsByUserId:IRequest<List<TodoList>>
     {
-        public GetTodoListsByUserId(string userId)
+        public GetTodoListsByUserId()
         {
-            UserId = userId;
         }
 
-        public string UserId { get; set; }
 
     }
 }
