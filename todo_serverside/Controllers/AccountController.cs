@@ -86,7 +86,14 @@ namespace todo_serverside.Controllers
         {
             var command = new SearchUserByUserNameCommand(UserName.UserName);
             var response = await _mediator.Send(command);
-            return response;
+            if (response.UserName!="")
+            {
+                return response;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
