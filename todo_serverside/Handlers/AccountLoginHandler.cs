@@ -37,13 +37,25 @@ namespace todo_serverside.Handlers
             if (result.Succeeded)
             {
                 UserValitaionClass.SetCurrentUserId(user.Id);
+                List<UserDTOs> usersFriends = new List<UserDTOs>();
+                foreach(string Id in JsonSerializer.Deserialize<string[]>(user.Friends))
+                {
+                    var userFound = await _userManager.FindByIdAsync(Id);
+                    usersFriends.Add(new UserDTOs { UserName = userFound.UserName, Id = userFound.Id, Avatar = userFound.Avatar });
+                }
+                List<UserDTOs> usersFriendRequest = new List<UserDTOs>();
+                foreach (string Id in JsonSerializer.Deserialize<string[]>(user.Friends))
+                {
+                    var userFound = await _userManager.FindByIdAsync(Id);
+                    usersFriendRequest.Add(new UserDTOs { UserName = userFound.UserName, Id = userFound.Id, Avatar = userFound.Avatar });
+                }
                 return new UserDTOs
                 {
                     UserName = user.UserName,
                     Id = UserValitaionClass.CurrentUserId,
                     Token = _tokenService.CreateToken(user),
-                    UserFriendsRequests = JsonSerializer.Deserialize<string[]>(user.FriendsRequest),
-                    UsersFriends = JsonSerializer.Deserialize<string[]>(user.Friends),
+                    UserFriendsRequests = usersFriendRequest,
+                    UsersFriends = usersFriends,
                     Avatar = user.Avatar
                     
                     
