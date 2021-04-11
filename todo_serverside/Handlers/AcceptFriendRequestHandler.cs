@@ -20,7 +20,7 @@ namespace todo_serverside.Handlers
             HttpContextAccessor = httpContextAccessor;
         }
 
-        public TodoListContext _context {get;set;}
+        public TodoListContext _context { get; set; }
         public IHttpContextAccessor HttpContextAccessor { get; }
 
         public Task<bool> Handle(AcceptFriendRequestCommand request, CancellationToken cancellationToken)
@@ -28,22 +28,35 @@ namespace todo_serverside.Handlers
             var currentUserId = HttpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userWhoAccept = _context.Users.FirstOrDefault(i => i.Id == currentUserId);
             var userWhoRequest = _context.Users.FirstOrDefault(i => i.Id == request.id.ToString());
-            if(userWhoAccept!=null&& userWhoRequest != null)
+            if (userWhoAccept != null && userWhoRequest != null)
             {
-                var userWhoAcceptNewFriendsRequest = JsonSerializer.Deserialize<string[]>(userWhoAccept.FriendsRequest).ToList<string>();
-                var userWhoAcceptNewFriends = JsonSerializer.Deserialize<string[]>(userWhoAccept.Friends).ToList<string>();
-                userWhoAcceptNewFriends.Add(request.id.ToString());
-                userWhoAccept.FriendsRequest = JsonSerializer.Serialize(userWhoAcceptNewFriendsRequest.Where(i => i != request.id.ToString()));
-                userWhoAccept.Friends = JsonSerializer.Serialize(userWhoAcceptNewFriends);
 
-                var userWhoRequestNewFriendsRequest = JsonSerializer.Deserialize<string[]>(userWhoRequest.FriendsRequest).ToList<string>();
-                var userWhoRequestNewFriends = JsonSerializer.Deserialize<string[]>(userWhoRequest.Friends).ToList<string>();
-                userWhoRequestNewFriends.Add(currentUserId);
-                //userWhoRequest.FriendsRequest = JsonSerializer.Serialize(userWhoRequestNewFriendsRequest.Where(i => i != request.id));
-                userWhoRequest.Friends = JsonSerializer.Serialize(userWhoRequestNewFriends);
+                var userFriendRequest = JsonSerializer.Deserialize<List<string>>(userWhoAccept.FriendsRequest);
+                var userFriends = JsonSerializer.Deserialize<List<string>>(userWhoAccept.Friends);
+                if (!userFriendRequest.Contains(currentUserId) && !userFriends.Contains(currentUserId))
+                {
+                    var userWhoAcceptNewFriendsRequest = JsonSerializer.Deserialize<string[]>(userWhoAccept.FriendsRequest).ToList<string>();
+                    var userWhoAcceptNewFriends = JsonSerializer.Deserialize<string[]>(userWhoAccept.Friends).ToList<string>();
+                    userWhoAcceptNewFriends.Add(request.id.ToString());
+                    userWhoAccept.FriendsRequest = JsonSerializer.Serialize(userWhoAcceptNewFriendsRequest.Where(i => i != request.id.ToString()));
+                    userWhoAccept.Friends = JsonSerializer.Serialize(userWhoAcceptNewFriends);
 
-                _context.SaveChanges();
-                return Task.FromResult(true);
+                    var userWhoRequestNewFriendsRequest = JsonSerializer.Deserialize<string[]>(userWhoRequest.FriendsRequest).ToList<string>();
+                    var userWhoRequestNewFriends = JsonSerializer.Deserialize<string[]>(userWhoRequest.Friends).ToList<string>();
+                    userWhoRequestNewFriends.Add(currentUserId);
+                    //userWhoRequest.FriendsRequest = JsonSerializer.Serialize(userWhoRequestNewFriendsRequest.Where(i => i != request.id));
+                    userWhoRequest.Friends = JsonSerializer.Serialize(userWhoRequestNewFriends);
+
+                    _context.SaveChanges();
+                    return Task.FromResult(true);
+                }
+                else
+                {
+                    return Task.FromResult(false);
+                }
+
+
+                   
             }
             else
             {

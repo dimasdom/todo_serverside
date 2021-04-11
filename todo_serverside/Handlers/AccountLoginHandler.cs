@@ -44,7 +44,7 @@ namespace todo_serverside.Handlers
                     usersFriends.Add(new UserDTOs { UserName = userFound.UserName, Id = userFound.Id, Avatar = userFound.Avatar });
                 }
                 List<UserDTOs> usersFriendRequest = new List<UserDTOs>();
-                foreach (string Id in JsonSerializer.Deserialize<string[]>(user.Friends))
+                foreach (string Id in JsonSerializer.Deserialize<string[]>(user.FriendsRequest))
                 {
                     var userFound = await _userManager.FindByIdAsync(Id);
                     usersFriendRequest.Add(new UserDTOs { UserName = userFound.UserName, Id = userFound.Id, Avatar = userFound.Avatar });
