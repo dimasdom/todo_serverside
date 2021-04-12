@@ -20,7 +20,6 @@ using todo_serverside.Photos;
 using todo_serverside.PipeLineBehavior;
 using todo_serverside.Services;
 using todo_serverside.SignalR;
-using todo_serverside.UserVerification;
 
 namespace todo_serverside
 {
@@ -90,8 +89,6 @@ namespace todo_serverside
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.AddHttpContextAccessor();
-            
-            services.AddScoped<UserVerificationClass>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

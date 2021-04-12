@@ -10,24 +10,22 @@ using todo_serverside.Commands;
 using todo_serverside.DTOs;
 using todo_serverside.Models;
 using todo_serverside.Services;
-using todo_serverside.UserVerification;
+
 
 namespace todo_serverside.Handlers
 {
     public class AccountLoginHandler : IRequestHandler<AccountLoginCommand, UserDTOs>
     {
-        public AccountLoginHandler(UserManager<User> userManager, SignInManager<User> signInManager, TokenService tokenService,UserVerificationClass userValitaionClass)
+        public AccountLoginHandler(UserManager<User> userManager, SignInManager<User> signInManager, TokenService tokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
-           UserValitaionClass = userValitaionClass;
         }
 
         private UserManager<User>_userManager { get; set; }
         private SignInManager<User> _signInManager { get; set; }
         private TokenService _tokenService { get; set; }
-       public UserVerificationClass UserValitaionClass { get; set; }
 
         public async Task<UserDTOs> Handle( AccountLoginCommand request, CancellationToken cancellationToken)
         {
@@ -36,7 +34,6 @@ namespace todo_serverside.Handlers
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.UserLogin.Password, false);
             if (result.Succeeded)
             {
-                UserValitaionClass.SetCurrentUserId(user.Id);
                 List<UserDTOs> usersFriends = new List<UserDTOs>();
                 foreach(string Id in JsonSerializer.Deserialize<string[]>(user.Friends))
                 {
@@ -52,7 +49,7 @@ namespace todo_serverside.Handlers
                 return new UserDTOs
                 {
                     UserName = user.UserName,
-                    Id = UserValitaionClass.CurrentUserId,
+                    Id = user.Id,
                     Token = _tokenService.CreateToken(user),
                     UserFriendsRequests = usersFriendRequest,
                     UsersFriends = usersFriends,

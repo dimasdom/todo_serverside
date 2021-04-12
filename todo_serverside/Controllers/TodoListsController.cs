@@ -14,7 +14,6 @@ using todo_serverside.Context;
 using todo_serverside.Models;
 using todo_serverside.Queries;
 using todo_serverside.Request;
-using todo_serverside.UserVerification;
 
 namespace todo_serverside.Controllers
 {

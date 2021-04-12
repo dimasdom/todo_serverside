@@ -95,5 +95,19 @@ namespace todo_serverside.Controllers
                 return NotFound();
             }
         }
+        [HttpGet("signOut")]
+        public async Task<ActionResult<bool>> SignOut()
+        {
+            var command = new AccountSignOutCommand();
+            var result = await _mediator.Send(command);
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }
