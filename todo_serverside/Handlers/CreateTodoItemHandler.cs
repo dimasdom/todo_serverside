@@ -19,11 +19,11 @@ namespace todo_serverside.Handlers
         }
 
         
-        public async Task<TodoItem> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
+        public  Task<TodoItem> Handle(CreateTodoItemCommand request, CancellationToken cancellationToken)
         {
             _context.TodoItems.Add(request.TodoItem);
-            await _context.SaveChangesAsync();
-            return request.TodoItem;
+            _context.SaveChanges();
+            return Task.FromResult(request.TodoItem);
         }
     }
 }
