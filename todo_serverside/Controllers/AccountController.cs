@@ -1,17 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using todo_serverside.Commands;
 using todo_serverside.DTOs;
-using todo_serverside.Models;
 using todo_serverside.Request;
-using todo_serverside.Services;
 
 namespace todo_serverside.Controllers
 {
@@ -20,12 +14,12 @@ namespace todo_serverside.Controllers
     public class AccountController : ControllerBase
     {
 
-     
+
         private readonly IMediator _mediator;
 
         public AccountController(IMediator mediator)
         {
-            
+
             _mediator = mediator;
         }
 
@@ -37,7 +31,7 @@ namespace todo_serverside.Controllers
             return response;
 
 
-            
+
         }
         [HttpPost("register")]
 
@@ -48,9 +42,9 @@ namespace todo_serverside.Controllers
             return response;
         }
         [HttpPost("setAvatar")]
-        public async Task<ActionResult<string>> SetAvatar( IFormFile avatar)
+        public async Task<ActionResult<string>> SetAvatar(IFormFile avatar)
         {
-            var command = new AccountSetAvatarCommand(avatar) ;
+            var command = new AccountSetAvatarCommand(avatar);
             var response = await _mediator.Send(command);
             return response;
         }
@@ -62,7 +56,8 @@ namespace todo_serverside.Controllers
             if (result)
             {
                 return Ok();
-            }else
+            }
+            else
             {
                 return NotFound();
             }
@@ -86,7 +81,7 @@ namespace todo_serverside.Controllers
         {
             var command = new SearchUserByUserNameCommand(UserName.UserName);
             var response = await _mediator.Send(command);
-            if (response.UserName!="")
+            if (response.UserName != "")
             {
                 return response;
             }

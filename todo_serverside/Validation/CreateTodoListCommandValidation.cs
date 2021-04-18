@@ -1,8 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using todo_serverside.Commands;
 
 namespace todo_serverside.Validation
@@ -16,5 +12,5 @@ namespace todo_serverside.Validation
             RuleFor(x => x.TodoList.OwnerId).NotEmpty();
         }
     }
-    
+
 }

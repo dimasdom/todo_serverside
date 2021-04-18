@@ -4,7 +4,7 @@ using todo_serverside.Models;
 
 namespace todo_serverside.Context
 {
-    public class TodoListContext: IdentityDbContext<User>
+    public class TodoListContext : IdentityDbContext<User>
     {
         public TodoListContext(DbContextOptions<TodoListContext> options) : base(options)
         {

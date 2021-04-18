@@ -1,11 +1,9 @@
-﻿using System;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using todo_serverside.Commands;
 using todo_serverside.Context;
 using todo_serverside.Models;
@@ -33,7 +31,7 @@ namespace todo_serverside.Controllers
         {
             var query = new GetTodoItemsByTodoListIdQuery(id);
 
-            var response =  await _mediator.Send(query);
+            var response = await _mediator.Send(query);
 
             if (response == null)
             {
@@ -46,7 +44,7 @@ namespace todo_serverside.Controllers
 
         // PUT: api/TodoItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-       
+
 
         // POST: api/TodoItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

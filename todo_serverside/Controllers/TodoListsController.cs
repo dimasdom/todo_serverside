@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using todo_serverside.Commands;
 using todo_serverside.Context;
 using todo_serverside.Models;
@@ -28,7 +26,7 @@ namespace todo_serverside.Controllers
         {
             _context = context;
             _mediator = mediator;
-            
+
         }
 
         // GET: api/TodoLists
@@ -48,25 +46,25 @@ namespace todo_serverside.Controllers
 
         // POST: api/TodoLists
         [HttpPost()]
-        public async Task<ActionResult<TodoList>> PostTodoList( TodoList todoList)
+        public async Task<ActionResult<TodoList>> PostTodoList(TodoList todoList)
         {
             var command = new CreateTodoListCommand(todoList);
             var handler = await _mediator.Send(command);
             return CreatedAtAction("GetTodoList", new { id = handler.Id }, todoList);
         }
         [HttpPost("changeCommonStatus/{id}")]
-        public async Task<IActionResult> ChangeCommonStatus(Guid id , UserIdsRequest UserIds)
+        public async Task<IActionResult> ChangeCommonStatus(Guid id, UserIdsRequest UserIds)
         {
-            var command = new TodoListChangeCommonStatus(id,UserIds.UserIds) ;
+            var command = new TodoListChangeCommonStatus(id, UserIds.UserIds);
             var handler = await _mediator.Send(command);
-            
-            return handler ? Ok():NotFound();
+
+            return handler ? Ok() : NotFound();
         }
         // DELETE: api/TodoLists/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTodoList( Guid id)
+        public async Task<IActionResult> DeleteTodoList(Guid id)
         {
-            var command = new DeleteTodoListFromAccount( id);
+            var command = new DeleteTodoListFromAccount(id);
             var result = await _mediator.Send(command);
             if (result)
             {
@@ -74,7 +72,7 @@ namespace todo_serverside.Controllers
             }
             else
             {
-               return  NotFound();
+                return NotFound();
             }
         }
 

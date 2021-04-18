@@ -1,8 +1,5 @@
-﻿using System;
+﻿using MediatR;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
 using todo_serverside.Models;
 
 namespace todo_serverside.Queries

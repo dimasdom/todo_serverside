@@ -3,13 +3,11 @@ using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace todo_serverside.Photos
 {
-    public class PhotoAccessor:IPhotoAccessor
+    public class PhotoAccessor : IPhotoAccessor
     {
         private readonly Cloudinary _cloudinary;
 
